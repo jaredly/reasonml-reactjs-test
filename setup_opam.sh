@@ -11,5 +11,5 @@ opam pin add -y reason 'https://github.com/facebook/reason.git#0.0.6'
 opam install -y js_of_ocaml
 opam install -y yojson
 opam install -y ocamlfind
-npm install --save-dev jengaboot
+opam pin add -y reactjs git@github.com:fxfactorial/ocaml-reactjs.git
 echo "done"
