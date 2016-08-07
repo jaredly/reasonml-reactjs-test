@@ -1,5 +1,5 @@
 node_modules
-src/testreact.js
 src/*.cmi
 src/*.cmj
-build.js
+src/*.js
+bundle.js*

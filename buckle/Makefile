@@ -1,6 +1,6 @@
 build:
 	clear
-	`npm bin`/bsc -pp refmt -impl src/moreact.re 2>&1 | huh
+	`npm bin`/bsc -pp refmt -impl src/moduledreact.re 2>&1 | huh
 
 hello:
 	./node_modules/.bin/bsc -pp refmt -impl Hello.re -bs-files *.ml *.mli 2>&1 | huh

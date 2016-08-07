@@ -1,7 +1,9 @@
-
+/* **************************
+// This answers the question:
+//   What would a function-based interface to react look like?
+// **************************
+*/
 type reactElement;
-type domProps = { paddingLeft: int, paddingRight: int, paddingHorizontal: int };
-
 type reactComponent;
 type reactComponentConfig;
 type domNode;
@@ -24,7 +26,7 @@ type reactNode =
   | Int of int
   | Float of float
   | ReactElement of reactElement
-  | Multi of (list reactNode)
+  | Children of (list reactNode)
   | Empty;
 
 external div : unit => reactElement = "ReactDOM.div" [@@bs.val];
@@ -101,9 +103,6 @@ let createStatefulComponent = fun
     fun props => (createEmptyElement component (makeJsProps props))
   };
 
-type myProps = {initialCount: int};
-type myState = {count: int};
-
 type javascriptUnsafe;
 external jj : 'a => javascriptUnsafe = "window.identity" [@@bs.val];
 external set_props_children : domConfig => 'children => unit = "children" [@@bs.set];
@@ -111,7 +110,7 @@ external set_props_children : domConfig => 'children => unit = "children" [@@bs.
 let rec js_children = fun children => {
   switch children {
     | Empty => jj [%bs.raw{|null|}];
-    | Multi children => jj (Array.map js_children (Array.of_list children));
+    | Children children => jj (Array.map js_children (Array.of_list children));
     | ReactElement el => jj el
     | Float value => jj value
     | Text value => jj value
@@ -119,21 +118,26 @@ let rec js_children = fun children => {
   }
 };
 
-let createDOMElement = fun tag config children::children=Empty () => {
+let createDOMElement = fun tag config children => {
   set_props_children config (js_children children);
   createEmptyElement tag config;
 };
 
 let button = createDOMElement "button";
 
+type myProps = {initialCount: int};
+type myState = {count: int};
+
 let counter = (createStatefulComponent
   getInitialState::(fun props => {
     {count: props.initialCount}
   })
   (fun props state setState => {
-    createElement "button" (makeMoreDomConfig onClick::(fun () => {
-      setState {count: state.count + 1}
-    })) (Printf.sprintf "Hello %d" state.count)
+    (button
+      (domProps onClick::(fun () => {
+        setState {count: state.count + 1}
+      }) ())
+      (Children [(Text "Hello "), (Int state.count)]))
   })
 );
 

@@ -1,3 +1,3 @@
 
 window.identity = x => x;
-require('./moreact').renderExample();
+require('./moduledreact').renderExample();
