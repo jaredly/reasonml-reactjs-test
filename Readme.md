@@ -1,5 +1,15 @@
 # Reasonml + Reactjs experimentation
 
+I tried three different ways of using react from reason.
+
+1. direct port, lots of js munging
+2. functional style
+
+
+
+
+
+
 ## Two options: jsoo & bucklescript
 
 - js_of_ocaml is the more established player, and more things know about &
@@ -43,4 +53,3 @@ Now it will recompile js + webpack whenever you change things!
 
 Go ahead and open `index.html` in your favorite browser to see the fruits of
 your labors!
-

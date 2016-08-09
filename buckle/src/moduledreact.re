@@ -87,12 +87,13 @@ module type ReactComponent = {
   let render: props => state => (state => unit) => reactElement;
 };
 
-
 module type FullReactComponent = (Component: ReactComponent) => {
+  type props;
   let create: Component.props => reactElement;
 };
 
 let module CreateClass = fun (Component: ReactComponent) => {
+  type props = Component.props;
   let component = createClass(class_config
     getInitialState::(fun () => {
       let props = [%bs.raw{|this.props.ml|}];
@@ -125,8 +126,26 @@ let module Counter = CreateClass {
       (Children [(Text "Moduly "), (Int state.count)]))
   };
 };
+
+open Counter;
+
+/*
+let stateful = fun initialState wrappedCreate => {
+  let module Wrapper = CreateClass {
+    type props = 'a;
+    type state = 'b;
+    let render = fun props state setState => {
+      wrappedCreate props state setState
+    };
+  };
+  Wrapper.create
+};
+*/
+
 type hackyProps = {initialCount: int}; /* need to expose for some reason? */
+
 let renderExample = fun () => {
   print_endline "hello reason + reactjs + bucklescript!";
-  render (Counter.create {initialCount: 10}) (getElementById "container");
+  let props = {initialCount: 10};
+  render (Counter.create props) (getElementById "container");
 };
